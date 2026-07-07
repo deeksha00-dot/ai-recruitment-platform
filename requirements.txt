@@ -1,0 +1,32 @@
+Choose a location where you keep projects.
+mkdir ai-recruitment-platform
+cd ai-recruitment-platform
+
+Initialize Git.
+git init
+
+Create our first directories.
+mkdir backend
+mkdir frontend
+
+
+Create the Python virtual environment
+cd backend
+
+Create a virtual environment.
+python -m venv venv
+
+Activate it.
+.\venv\Scripts\Activate.ps1
+
+git bash
+source venv/Scripts/activate
+
+
+Install our first backend packages
+pip install fastapi uvicorn
+
+Run your backend server
+uvicorn app.main:app --reload
+
+Modify main.py.
