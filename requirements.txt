@@ -30,3 +30,38 @@ Run your backend server
 uvicorn app.main:app --reload
 
 Modify main.py.
+
+backend/
+
+│
+├── app/
+│
+│   ├── main.py
+│
+│   ├── routers/
+│   │      jobs.py
+│   │
+│   ├── schemas/
+│   │      job.py
+│   │
+│   ├── services/
+│   │      job_service.py
+│   │
+│   └── database/
+│          database.py
+│
+├── requirements.txt
+└── venv/
+
+Install Database Packages
+-->pip install sqlalchemy psycopg2-binary
+-->pip install python-dotenv
+-->pip freeze > requirements.txt
+
+
+Install it:
+pip install pymupdf
+pip freeze > requirements.txt
+
+pip install sentence-transformers
+pip install scikit-learn
