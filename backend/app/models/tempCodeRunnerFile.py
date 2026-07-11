@@ -1,0 +1,1 @@
+required_skills = Column(String)
