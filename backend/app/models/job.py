@@ -1,16 +1,14 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import declarative_base
+from app.database.database import Base
 
-Base = declarative_base()
 
 class Job(Base):
-
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
 
-    title = Column(String)
-
-    description = Column(String)
-
-    required_skills = Column(String)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    location = Column(String)
+    company = Column(String)
+    skills_required = Column(String)

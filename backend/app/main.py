@@ -1,27 +1,43 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers.jobs import router as job_router
-from app.routers.resumes import router as resume_router
+from app.database.database import Base, engine
 
-from app.database.database import engine
+# Import models
+from app.models.user import User
+from app.models.job import Job
+from app.models.candidate import Candidate
 
-from app.models.job import Base
-from app.models.candidate import Candidate   # <-- Add this
+# Import routers
+from app.routers.auth import router as auth_router
+from app.routers.jobs import router as jobs_router
+from app.routers.resumes import router as resumes_router
 
-# Create all database tables
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="AI Recruitment Platform",
+    title="AI Recruitment Platform API",
     version="1.0.0"
 )
 
-# Register routers
-app.include_router(job_router)
-app.include_router(resume_router)
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # Change this to your frontend URL in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Home Route
 @app.get("/")
 def home():
     return {
-        "message": "AI Recruitment Platform API is running"
+        "message": "AI Recruitment Platform API is running successfully 🚀"
     }
+
+# Include Routers
+app.include_router(auth_router)
+app.include_router(jobs_router)
+app.include_router(resumes_router)
