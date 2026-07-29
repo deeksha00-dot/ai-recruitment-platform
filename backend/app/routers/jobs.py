@@ -3,7 +3,14 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.job import Job
-from app.schemas.job import JobCreate, JobUpdate
+
+from app.schemas.job import (
+    JobCreate,
+    JobUpdate,
+    JobResponse,
+)
+
+from app.auth.roles import require_recruiter
 
 router = APIRouter(
     prefix="/jobs",
@@ -11,13 +18,17 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", response_model=list[JobResponse])
 def get_jobs(db: Session = Depends(get_db)):
-    return db.query(Job).all()
+    jobs = db.query(Job).all()
+    return jobs
 
 
-@router.get("/{job_id}")
-def get_job(job_id: int, db: Session = Depends(get_db)):
+@router.get("/{job_id}", response_model=JobResponse)
+def get_job(
+    job_id: int,
+    db: Session = Depends(get_db)
+):
     job = db.query(Job).filter(Job.id == job_id).first()
 
     if not job:
@@ -29,8 +40,12 @@ def get_job(job_id: int, db: Session = Depends(get_db)):
     return job
 
 
-@router.post("/")
-def create_job(job: JobCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=JobResponse)
+def create_job(
+    job: JobCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_recruiter)
+):
     new_job = Job(
         title=job.title,
         description=job.description,
@@ -43,17 +58,15 @@ def create_job(job: JobCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_job)
 
-    return {
-        "message": "Job created successfully",
-        "job": new_job
-    }
+    return new_job
 
 
-@router.put("/{job_id}")
+@router.put("/{job_id}", response_model=JobResponse)
 def update_job(
     job_id: int,
     job_data: JobUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(require_recruiter)
 ):
     job = db.query(Job).filter(Job.id == job_id).first()
 
@@ -72,14 +85,15 @@ def update_job(
     db.commit()
     db.refresh(job)
 
-    return {
-        "message": "Job updated successfully",
-        "job": job
-    }
+    return job
 
 
 @router.delete("/{job_id}")
-def delete_job(job_id: int, db: Session = Depends(get_db)):
+def delete_job(
+    job_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_recruiter)
+):
     job = db.query(Job).filter(Job.id == job_id).first()
 
     if not job:

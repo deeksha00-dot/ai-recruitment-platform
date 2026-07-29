@@ -12,6 +12,8 @@ from app.models.candidate import Candidate
 from app.routers.auth import router as auth_router
 from app.routers.jobs import router as jobs_router
 from app.routers.resumes import router as resumes_router
+from app.routers import candidates
+from app.routers import dashboard
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -41,3 +43,5 @@ def home():
 app.include_router(auth_router)
 app.include_router(jobs_router)
 app.include_router(resumes_router)
+app.include_router(candidates.router)
+app.include_router(dashboard.router)

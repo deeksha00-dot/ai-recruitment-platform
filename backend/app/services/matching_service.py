@@ -76,4 +76,11 @@ def calculate_final_score(
         final_score=final_score
     )
 
-    return explanation
+    return {
+    "keyword_score": keyword_score,
+    "semantic_score": semantic_score,
+    "final_score": final_score,
+    "matched_skills": matched_skills,
+    "missing_skills": missing_skills,
+    "explanation": explanation,
+}
